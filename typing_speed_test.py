@@ -1,6 +1,16 @@
-from time import *
+from threading import Thread
 import random as r
-import threading
+import time
+import os
+import msvcrt
+
+arr = ['''authors traditionally divide their thoughts and arguments into sequences of paragraphs''',
+       '''The real wealth of an individual is hard work and nobody can become successful without it.''',
+       '''A paragraph is a collection of words strung together to make a longer unit than a sentence''',
+       ''' The application is a minimalistic and customizable typing test. ''']
+
+answer = ""
+test = ""
 
 
 def mistake(given_words, user_words):
@@ -19,45 +29,33 @@ def speed_test(time_set1, user_input):
     return user_speed
 
 
-arr = ['''this is a simple paragraph that is meant to be nice and easy to type which is why there will be
-mommas no periods or any capital letters so i guess this means that it cannot really be considered a paragraph
-but just a series of run on sentences this should help you get faster at typing as im trying not to use
-too many difficult words in it although i think that i might start making it hard by including some more difficult
-letters I'm typing pretty quickly so forgive me for any mistakes i think that i will not just tell you a story
-about the time i went to the zoo and found a monkey and a fox playing together they''',
-       '''you will be able to communicate more effectively in english both in written and spoken form. By decreasing your reading 
-    size and focusing on a personalized language learning lesson your language levels will grow from simple vocabulary lists 
-    to a built-in dictionary.''', '''hello bro do even code''']
+def ask():
+    global start_time, answer, test
+    start_time = time.time()
+    test = r.choice(arr)
+    empty_string = ""
+    print(test)
+    while(empty_string != "\n"):
+        empty_string = msvcrt.getch().decode('ASCII')
+        answer += empty_string
 
-test = r.choice(arr)
+    time.sleep(0.001)
 
-print("********typing speed test***********")
-print()
-print()
+
+def timing(run_time):
+    time_limit = run_time
+    while True:
+        time_taken = time.time() - start_time
+        if time_taken > time_limit:
+            print(answer)
+            print("----> speed: ", speed_test(x, answer), "Wpm")
+            print("-----> errors: ", mistake(test, answer))
+            os._exit(1)
+        time.sleep(0.001)
+
+
 x = int(input("how many seconds you want to run this code? \n"))
-print()
-print()
-print(test)
-
-userinput = ""
-
-
-def user():
-    global userinput
-    userinput = input()
-    hey.cancel()
-
-
-print()
-print()
-
-hey = threading.Timer(x, user)
-hey.start()
-
-
-while(True):
-
-    if(hey.is_alive() == False):
-        print("speed: ", speed_test(x, userinput), "Wpm")
-        print("errors: ", mistake(test, userinput))
-        break
+t1 = Thread(target=ask)
+t2 = Thread(target=lambda run_time=x: timing(run_time))
+t1.start()
+t2.start()
